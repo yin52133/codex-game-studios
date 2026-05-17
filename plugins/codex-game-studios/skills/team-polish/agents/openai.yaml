@@ -1,0 +1,4 @@
+interface:
+  display_name: "Team Polish"
+  short_description: "Orchestrate the polish team: coordinates performance-analyst, technical-artist, sound-designer, and qa-tester to optimiz"
+  default_prompt: "Use $codex-game-studios:team-polish for this game-development workflow."

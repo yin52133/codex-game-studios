@@ -1,0 +1,4 @@
+interface:
+  display_name: "Vertical Slice"
+  short_description: "Pre-Production validation — build a production-quality end-to-end build to confirm the full game loop is achievable befo"
+  default_prompt: "Use $codex-game-studios:vertical-slice for this game-development workflow."

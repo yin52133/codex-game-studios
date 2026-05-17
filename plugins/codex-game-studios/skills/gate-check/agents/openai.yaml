@@ -1,0 +1,4 @@
+interface:
+  display_name: "Gate Check"
+  short_description: "Validate readiness to advance between development phases. Produces a PASS/CONCERNS/FAIL verdict with specific blockers a"
+  default_prompt: "Use $codex-game-studios:gate-check for this game-development workflow."

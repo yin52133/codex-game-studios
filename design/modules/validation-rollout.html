@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Codex Game Studios Validation and Rollout</title>
+  <style>
+    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.55; margin: 0; color: #1f2937; }
+    main { max-width: 1080px; margin: 0 auto; padding: 32px 24px 56px; }
+    nav { border: 1px solid #d1d5db; border-radius: 8px; padding: 16px; background: #f9fafb; }
+    h1, h2, h3 { line-height: 1.2; color: #111827; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+    th, td { border: 1px solid #d1d5db; padding: 8px 10px; vertical-align: top; }
+    th { background: #f3f4f6; text-align: left; }
+    code { background: #f3f4f6; padding: 1px 4px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Validation and Rollout</h1>
+  <nav aria-label="Module navigation">
+    <a href="../index.html">Back to Index</a> |
+    <a href="filesystem-layout.html">Filesystem Layout</a> |
+    <a href="conversion-contracts.html">Conversion Contracts</a>
+  </nav>
+
+  <section id="validation-matrix">
+    <h2>Validation Matrix</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Check</th>
+          <th>Command or Method</th>
+          <th>Pass Criteria</th>
+          <th>Failure Outcome</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>JSON validity</td>
+          <td><code>python -m json.tool</code> over <code>plugin.json</code>, marketplace JSON, and checklist JSON.</td>
+          <td>All JSON files parse with no duplicate generated paths.</td>
+          <td>Stop implementation and fix the generated file.</td>
+        </tr>
+        <tr>
+          <td>Source inventory</td>
+          <td><code>find</code> or generated manifest comparison against the reference tree.</td>
+          <td>Manifest records 73 skills, 49 agents, 12 hooks, and 11 rules.</td>
+          <td>Stop conversion; missing source files make downstream counts unreliable.</td>
+        </tr>
+        <tr>
+          <td>Skill frontmatter</td>
+          <td>Validation script parses each generated <code>SKILL.md</code>.</td>
+          <td>Every skill has <code>name</code> and <code>description</code>; no generated skill keeps Claude-only frontmatter fields.</td>
+          <td>Fail the port until the specific skill is repaired.</td>
+        </tr>
+        <tr>
+          <td>Reference reachability</td>
+          <td>Link checker over generated Markdown and HTML references.</td>
+          <td>All intra-plugin links resolve relative to plugin root.</td>
+          <td>Fail the port; broken links block review.</td>
+        </tr>
+        <tr>
+          <td>Claude-only runtime constructs</td>
+          <td><code>rg "\.claude|CLAUDE\.md|AskUserQuestion|TodoWrite|Task|allowed-tools|disallowedTools|maxTurns"</code> over generated runtime files.</td>
+          <td>Matches appear only in source-attribution, migration notes, or explicit compatibility warnings.</td>
+          <td>Manual review required for each match before release.</td>
+        </tr>
+        <tr>
+          <td>Workflow smoke test</td>
+          <td>Run a representative Codex session using the generated <code>start</code>, <code>design-system</code>, and <code>code-review</code> skills.</td>
+          <td>The workflow can identify next steps, read references, and produce expected project artifacts without opening the source reference tree.</td>
+          <td>Block release and add missing references or skill instructions.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="manual-review-gates">
+    <h2>Manual Review Gates</h2>
+    <ol>
+      <li><strong>Role authority review:</strong> confirm role references do not overclaim autonomous authority and still preserve escalation paths.</li>
+      <li><strong>Skill behavior review:</strong> confirm each high-impact workflow skill uses Codex collaboration rules, especially before file writes and multi-file changes.</li>
+      <li><strong>License and attribution review:</strong> confirm upstream license and source attribution are included in the plugin package.</li>
+      <li><strong>Hook schema review:</strong> confirm Codex hook registration before enabling any automatic hook behavior.</li>
+    </ol>
+  </section>
+
+  <section id="rollout-steps">
+    <h2>Rollout Steps</h2>
+    <ol>
+      <li><strong>Local review package:</strong> generate the plugin under <code>plugins/codex-game-studios</code> and keep marketplace registration disabled. Verify file counts and JSON validity.</li>
+      <li><strong>Reviewer trial:</strong> enable the repo-local marketplace entry and run one concept workflow plus one review workflow in a disposable game project.</li>
+      <li><strong>Compatibility pass:</strong> capture every manual workaround needed during the trial and update the relevant skill or reference.</li>
+      <li><strong>Release candidate:</strong> mark checklist items complete, keep unsupported hook registration documented, and tag the plugin version as <code>0.1.0</code>.</li>
+    </ol>
+  </section>
+
+  <section id="open-risks">
+    <h2>Open Risks</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Risk</th>
+          <th>Impact</th>
+          <th>Mitigation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Codex custom-agent schema is unavailable or different from Claude's agent schema.</td>
+          <td>Role prompts cannot be installed as executable custom agents.</td>
+          <td>Preserve roles as references and route them from skills. Add generated agent files only after schema confirmation.</td>
+        </tr>
+        <tr>
+          <td>Hook event schema differs from Claude events.</td>
+          <td>Automatic validation hooks may fire at wrong times or receive incompatible input.</td>
+          <td>Keep hooks as manual scripts until schema validation passes.</td>
+        </tr>
+        <tr>
+          <td>Large converted skills overload Codex context.</td>
+          <td>Skill use becomes noisy and less reliable.</td>
+          <td>Move examples, templates, and long catalogs into references; keep <code>SKILL.md</code> procedural.</td>
+        </tr>
+        <tr>
+          <td>Claude include syntax is copied into Codex instructions.</td>
+          <td>Important rules may silently fail to load.</td>
+          <td>Resolve includes during generation and validate that no unresolved <code>@path</code> remains in runtime instructions.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</main>
+</body>
+</html>

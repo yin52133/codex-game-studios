@@ -1,0 +1,4 @@
+interface:
+  display_name: "Design Review"
+  short_description: "Reviews a game design document for completeness, internal consistency, implementability, and adherence to project design"
+  default_prompt: "Use $codex-game-studios:design-review for this game-development workflow."

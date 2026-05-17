@@ -1,0 +1,4 @@
+interface:
+  display_name: "Launch Checklist"
+  short_description: "Complete launch readiness validation covering every department: code, content, store, marketing, community, infrastructu"
+  default_prompt: "Use $codex-game-studios:launch-checklist for this game-development workflow."

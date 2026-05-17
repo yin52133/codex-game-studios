@@ -1,0 +1,4 @@
+interface:
+  display_name: "Team Combat"
+  short_description: "Orchestrate the combat team: coordinates game-designer, gameplay-programmer, ai-programmer, technical-artist, sound-desi"
+  default_prompt: "Use $codex-game-studios:team-combat for this game-development workflow."

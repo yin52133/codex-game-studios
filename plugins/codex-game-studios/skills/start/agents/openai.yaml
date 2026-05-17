@@ -1,0 +1,4 @@
+interface:
+  display_name: "Start"
+  short_description: "First-time onboarding — asks where you are, then guides you to the right workflow. No assumptions. (source alias: /start"
+  default_prompt: "Use $codex-game-studios:start for this game-development workflow."

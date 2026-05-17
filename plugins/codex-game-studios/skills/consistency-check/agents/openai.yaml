@@ -1,0 +1,4 @@
+interface:
+  display_name: "Consistency Check"
+  short_description: "Scan all GDDs against the entity registry to detect cross-document inconsistencies: same entity with different stats, sa"
+  default_prompt: "Use $codex-game-studios:consistency-check for this game-development workflow."

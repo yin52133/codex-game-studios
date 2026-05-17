@@ -1,0 +1,4 @@
+interface:
+  display_name: "Milestone Review"
+  short_description: "Generates a comprehensive milestone progress review including feature completeness, quality metrics, risk assessment, an"
+  default_prompt: "Use $codex-game-studios:milestone-review for this game-development workflow."

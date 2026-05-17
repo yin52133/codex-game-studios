@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Codex Game Studios Filesystem Layout</title>
+  <style>
+    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.55; margin: 0; color: #1f2937; }
+    main { max-width: 1080px; margin: 0 auto; padding: 32px 24px 56px; }
+    nav { border: 1px solid #d1d5db; border-radius: 8px; padding: 16px; background: #f9fafb; }
+    h1, h2, h3 { line-height: 1.2; color: #111827; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+    th, td { border: 1px solid #d1d5db; padding: 8px 10px; vertical-align: top; }
+    th { background: #f3f4f6; text-align: left; }
+    code { background: #f3f4f6; padding: 1px 4px; border-radius: 4px; }
+    pre { background: #f8fafc; border: 1px solid #d1d5db; border-radius: 8px; padding: 14px; overflow-x: auto; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Filesystem Layout</h1>
+  <nav aria-label="Module navigation">
+    <a href="../index.html">Back to Index</a> |
+    <a href="conversion-contracts.html">Conversion Contracts</a> |
+    <a href="validation-rollout.html">Validation and Rollout</a>
+  </nav>
+
+  <section id="root-declaration">
+    <h2>Root Declaration</h2>
+    <p>The repository root is <code>.</code>. The source reference root is <code>the upstream Claude-Code-Game-Studios source snapshot</code>. The target plugin root for implementation is <code>plugins/codex-game-studios</code>.</p>
+  </section>
+
+  <section id="source-layout">
+    <h2>Source Layout</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Source Path</th>
+          <th>Observed Content</th>
+          <th>Port Treatment</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>CLAUDE.md</code></td>
+          <td>Master Claude project configuration with <code>@path</code> includes.</td>
+          <td>Translate into root <code>AGENTS.md</code> plus links to plugin references.</td>
+        </tr>
+        <tr>
+          <td><code>.claude/settings.json</code></td>
+          <td>Claude permissions, status line, and hook event bindings.</td>
+          <td>Extract policy intent. Do not copy as Codex settings.</td>
+        </tr>
+        <tr>
+          <td><code>.claude/skills/*/SKILL.md</code></td>
+          <td>73 Claude slash-command skills.</td>
+          <td>Convert into Codex skill folders under <code>plugins/codex-game-studios/skills</code>.</td>
+        </tr>
+        <tr>
+          <td><code>.claude/agents/*.md</code></td>
+          <td>49 Claude agent definitions with model, tools, memory, and role prompts.</td>
+          <td>Convert into role references and a role routing index.</td>
+        </tr>
+        <tr>
+          <td><code>.claude/hooks/*.sh</code></td>
+          <td>12 hook scripts for validation, notifications, session events, and agent logs.</td>
+          <td>Copy portable scripts into <code>scripts/</code> with Codex wrapper docs; defer automatic event registration.</td>
+        </tr>
+        <tr>
+          <td><code>.claude/rules/*.md</code></td>
+          <td>11 path-scoped coding standards.</td>
+          <td>Convert into <code>references/rules/</code> and summarize active routing in <code>AGENTS.md</code>.</td>
+        </tr>
+        <tr>
+          <td><code>.claude/docs/templates/*.md</code></td>
+          <td>Document templates for GDDs, ADRs, UX specs, tests, release artifacts, and more.</td>
+          <td>Convert into <code>references/templates/</code> or <code>assets/templates/</code> depending on whether the file is read as context or copied as output.</td>
+        </tr>
+        <tr>
+          <td><code>docs/engine-reference/**</code></td>
+          <td>Godot, Unity, and Unreal version and module reference material.</td>
+          <td>Keep as plugin references grouped by engine.</td>
+        </tr>
+        <tr>
+          <td><code>.git/**</code></td>
+          <td>Source repository internals.</td>
+          <td>Exclude from the port.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="target-layout">
+    <h2>Target Layout</h2>
+    <pre><code>plugins/codex-game-studios/
+  .codex-plugin/
+    plugin.json
+  skills/
+    start/
+      SKILL.md
+      agents/openai.yaml
+    design-system/
+      SKILL.md
+      references/
+    ...
+  references/
+    roles/
+      creative-director.md
+      technical-director.md
+      producer.md
+      ...
+    role-routing.md
+    workflow-catalog.yaml
+    rules/
+    templates/
+    engine-reference/
+    source-attribution.md
+  scripts/
+    validate_port.py
+    hooks/
+      validate-commit.sh
+      validate-push.sh
+      validate-assets.sh
+      ...
+  assets/
+    icons/
+
+AGENTS.md
+.agents/
+  plugins/
+    marketplace.json
+design/
+  index.html
+  modules/
+  checklist.json</code></pre>
+  </section>
+
+  <section id="ownership-rules">
+    <h2>Ownership Rules</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Path</th>
+          <th>Owner</th>
+          <th>Write Rule</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>the upstream Claude-Code-Game-Studios source snapshot/**</code></td>
+          <td>Upstream reference.</td>
+          <td>Read only during the port.</td>
+        </tr>
+        <tr>
+          <td><code>design/**</code></td>
+          <td>Porting spec owner.</td>
+          <td>Update only when design changes; keep checklist aligned with implementation deltas.</td>
+        </tr>
+        <tr>
+          <td><code>plugins/codex-game-studios/**</code></td>
+          <td>Generated Codex plugin.</td>
+          <td>Generated by conversion scripts, then manually reviewed for high-risk role and workflow language.</td>
+        </tr>
+        <tr>
+          <td><code>AGENTS.md</code></td>
+          <td>Repository instruction owner.</td>
+          <td>Generated baseline may be edited by maintainers; later regeneration must preserve marked local sections.</td>
+        </tr>
+        <tr>
+          <td><code>.agents/plugins/marketplace.json</code></td>
+          <td>Local marketplace owner.</td>
+          <td>Append or update the single <code>codex-game-studios</code> entry; preserve unrelated marketplace entries.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</main>
+</body>
+</html>

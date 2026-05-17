@@ -1,0 +1,4 @@
+interface:
+  display_name: "Code Review"
+  short_description: "Performs an architectural and quality code review on a specified file or set of files. Checks for coding standard compli"
+  default_prompt: "Use $codex-game-studios:code-review for this game-development workflow."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Retrospective"
+  short_description: "Generates a sprint or milestone retrospective by analyzing completed work, velocity, blockers, and patterns. Produces ac"
+  default_prompt: "Use $codex-game-studios:retrospective for this game-development workflow."

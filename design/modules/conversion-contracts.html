@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Codex Game Studios Conversion Contracts</title>
+  <style>
+    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.55; margin: 0; color: #1f2937; }
+    main { max-width: 1080px; margin: 0 auto; padding: 32px 24px 56px; }
+    nav { border: 1px solid #d1d5db; border-radius: 8px; padding: 16px; background: #f9fafb; }
+    h1, h2, h3 { line-height: 1.2; color: #111827; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+    th, td { border: 1px solid #d1d5db; padding: 8px 10px; vertical-align: top; }
+    th { background: #f3f4f6; text-align: left; }
+    code { background: #f3f4f6; padding: 1px 4px; border-radius: 4px; }
+    pre { background: #f8fafc; border: 1px solid #d1d5db; border-radius: 8px; padding: 14px; overflow-x: auto; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Conversion Contracts</h1>
+  <nav aria-label="Module navigation">
+    <a href="../index.html">Back to Index</a> |
+    <a href="filesystem-layout.html">Filesystem Layout</a> |
+    <a href="validation-rollout.html">Validation and Rollout</a>
+  </nav>
+
+  <section id="plugin-contract">
+    <h2>Plugin Manifest Contract</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Field</th>
+          <th>Required Value</th>
+          <th>Error Behavior</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>name</code></td>
+          <td><code>codex-game-studios</code></td>
+          <td>Fail validation if the folder name and manifest name differ.</td>
+        </tr>
+        <tr>
+          <td><code>version</code></td>
+          <td>Semantic version, starting at <code>0.1.0</code> for the first converted package.</td>
+          <td>Fail validation if the value is missing or not semver-like.</td>
+        </tr>
+        <tr>
+          <td><code>skills</code></td>
+          <td><code>./skills/</code></td>
+          <td>Fail validation if the path is absolute or missing.</td>
+        </tr>
+        <tr>
+          <td><code>interface.displayName</code></td>
+          <td><code>Codex Game Studios</code></td>
+          <td>Fail validation if the display metadata is absent.</td>
+        </tr>
+        <tr>
+          <td><code>hooks</code></td>
+          <td>Omit until Codex hook schema is verified.</td>
+          <td>Fail validation if generated against an unknown schema.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="skill-contract">
+    <h2>Skill Conversion Contract</h2>
+    <p>Each source <code>.claude/skills/&lt;name&gt;/SKILL.md</code> produces one target <code>skills/&lt;name&gt;/SKILL.md</code>. The generated file must be concise enough for Codex skill loading and move large examples or catalogs into references.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Claude Field or Pattern</th>
+          <th>Codex Target</th>
+          <th>Rule</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>name</code></td>
+          <td><code>name</code></td>
+          <td>Keep kebab-case names unless a collision appears. Collisions fail conversion.</td>
+        </tr>
+        <tr>
+          <td><code>description</code></td>
+          <td><code>description</code></td>
+          <td>Rewrite to mention when Codex should use the skill. Include the old slash command as an alias phrase.</td>
+        </tr>
+        <tr>
+          <td><code>argument-hint</code></td>
+          <td>Body section <code>Invocation Inputs</code></td>
+          <td>Preserve input shape as prose because Codex trigger metadata does not use this field for routing.</td>
+        </tr>
+        <tr>
+          <td><code>user-invocable</code></td>
+          <td>Description wording</td>
+          <td>Drop the field. If true, include the use case in the description.</td>
+        </tr>
+        <tr>
+          <td><code>allowed-tools</code></td>
+          <td>Body constraints only when behaviorally necessary</td>
+          <td>Remove Claude tool lists. Replace <code>Task</code> delegation instructions with Codex sub-agent guidance only where the current Codex environment allows it.</td>
+        </tr>
+        <tr>
+          <td><code>model</code></td>
+          <td>Reference note, if needed</td>
+          <td>Do not require a Codex model override. Mention high-complexity review only when the skill needs it.</td>
+        </tr>
+        <tr>
+          <td>Large workflow examples</td>
+          <td><code>references/&lt;topic&gt;.md</code></td>
+          <td>Move examples over 150 lines out of the main <code>SKILL.md</code> and link them from the relevant step.</td>
+        </tr>
+        <tr>
+          <td>Slash command references such as <code>/design-system</code></td>
+          <td>Skill name and alias text</td>
+          <td>Use "the <code>design-system</code> skill" as the primary form. Keep slash syntax only in migration notes or source examples.</td>
+        </tr>
+      </tbody>
+    </table>
+    <h3>Minimum Generated Skill Shape</h3>
+    <pre><code>---
+name: design-system
+description: Use when Codex should guide section-by-section GDD authoring for a single game system; source alias: /design-system.
+---
+
+# Design System
+
+## Purpose
+...
+
+## Invocation Inputs
+...
+
+## Workflow
+...
+
+## References
+- Read references/templates/game-design-document.md when writing the final GDD.
+- Read references/roles/game-designer.md when design authority is needed.</code></pre>
+  </section>
+
+  <section id="role-contract">
+    <h2>Role Conversion Contract</h2>
+    <p>Each source agent prompt is preserved as role guidance, not as executable custom-agent metadata. Generated role references must keep domain authority, collaboration protocol, escalation paths, and file ownership constraints.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Claude Agent Field</th>
+          <th>Codex Target</th>
+          <th>Rule</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>name</code></td>
+          <td><code>references/roles/&lt;name&gt;.md</code></td>
+          <td>Keep the original name for traceability.</td>
+        </tr>
+        <tr>
+          <td><code>description</code></td>
+          <td>Role summary and routing index</td>
+          <td>Use it to decide when a skill should consult the role reference.</td>
+        </tr>
+        <tr>
+          <td><code>tools</code>, <code>disallowedTools</code></td>
+          <td>Safety notes only</td>
+          <td>Remove Claude tool names. Preserve intent such as "does not run shell commands" when it is a domain boundary.</td>
+        </tr>
+        <tr>
+          <td><code>model</code>, <code>maxTurns</code>, <code>memory</code></td>
+          <td>Source metadata table</td>
+          <td>Record for traceability. Do not make it a Codex runtime requirement.</td>
+        </tr>
+        <tr>
+          <td><code>skills</code></td>
+          <td>Role routing index</td>
+          <td>Map to target Codex skill names and flag missing skills as conversion errors.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="instructions-contract">
+    <h2>Instruction Conversion Contract</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Source</th>
+          <th>Target</th>
+          <th>Required Behavior</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>CLAUDE.md</code></td>
+          <td><code>AGENTS.md</code></td>
+          <td>Inline core collaboration and project-structure instructions. Replace <code>@path</code> includes with readable links or summaries.</td>
+        </tr>
+        <tr>
+          <td><code>src/CLAUDE.md</code>, <code>docs/CLAUDE.md</code>, <code>design/CLAUDE.md</code></td>
+          <td>Path-specific <code>AGENTS.md</code> files when the port creates those directories</td>
+          <td>Preserve path scope. Do not put Codex-only files under <code>.trae</code> or source <code>.claude</code>.</td>
+        </tr>
+        <tr>
+          <td><code>.claude/rules/*.md</code></td>
+          <td><code>references/rules/*.md</code> and root routing summary</td>
+          <td>Keep detailed rules as references and expose when to read each one.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="hook-contract">
+    <h2>Hook and Script Contract</h2>
+    <p>Hook scripts move through two states. State 1 is required for the initial port; State 2 is allowed only after schema verification.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>State</th>
+          <th>Output</th>
+          <th>Pass Condition</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>State 1: script preservation</td>
+          <td><code>scripts/hooks/*.sh</code> plus <code>references/hooks.md</code></td>
+          <td>Scripts are copied with executable bit preserved where supported, shellcheck-safe changes documented, and no automatic event binding generated.</td>
+        </tr>
+        <tr>
+          <td>State 2: Codex hook registration</td>
+          <td><code>hooks.json</code> and manifest <code>hooks</code> field</td>
+          <td>Codex hook event names, input schema, timeout behavior, and failure semantics are verified against current Codex documentation or local examples.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</main>
+</body>
+</html>

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Security Audit"
+  short_description: "Audit the game for security vulnerabilities: save tampering, cheat vectors, network exploits, data exposure, and input v"
+  default_prompt: "Use $codex-game-studios:security-audit for this game-development workflow."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create Control Manifest"
+  short_description: "After architecture is complete, produces a flat actionable rules sheet for programmers — what you must do, what you must"
+  default_prompt: "Use $codex-game-studios:create-control-manifest for this game-development workflow."

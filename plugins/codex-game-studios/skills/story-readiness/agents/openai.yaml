@@ -1,0 +1,4 @@
+interface:
+  display_name: "Story Readiness"
+  short_description: "Validate that a story file is implementation-ready. Checks for embedded GDD requirements, ADR references, engine notes, "
+  default_prompt: "Use $codex-game-studios:story-readiness for this game-development workflow."

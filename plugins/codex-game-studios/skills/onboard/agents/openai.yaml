@@ -1,0 +1,4 @@
+interface:
+  display_name: "Onboard"
+  short_description: "Generates a contextual onboarding document for a new contributor or agent joining the project. Summarizes project state,"
+  default_prompt: "Use $codex-game-studios:onboard for this game-development workflow."

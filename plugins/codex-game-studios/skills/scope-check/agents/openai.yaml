@@ -1,0 +1,4 @@
+interface:
+  display_name: "Scope Check"
+  short_description: "Analyze a feature or sprint for scope creep by comparing current scope against the original plan. Flags additions, quant"
+  default_prompt: "Use $codex-game-studios:scope-check for this game-development workflow."

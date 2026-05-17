@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Codex Game Studios Porting Spec</title>
+  <style>
+    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.55; margin: 0; color: #1f2937; background: #ffffff; }
+    main { max-width: 1120px; margin: 0 auto; padding: 32px 24px 56px; }
+    nav { border: 1px solid #d1d5db; border-radius: 8px; padding: 16px; background: #f9fafb; }
+    h1, h2, h3 { line-height: 1.2; color: #111827; }
+    h1 { margin-top: 0; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+    th, td { border: 1px solid #d1d5db; padding: 8px 10px; vertical-align: top; }
+    th { background: #f3f4f6; text-align: left; }
+    code { background: #f3f4f6; padding: 1px 4px; border-radius: 4px; }
+    pre { background: #f8fafc; border: 1px solid #d1d5db; border-radius: 8px; padding: 14px; overflow-x: auto; }
+    .decision { border-left: 4px solid #2563eb; padding-left: 14px; margin: 16px 0; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Codex Game Studios Porting Spec</h1>
+
+  <nav aria-label="Spec navigation">
+    <strong>Navigation</strong>
+    <ul>
+      <li><a href="#problem-goal">Problem and Goal</a></li>
+      <li><a href="#scope">Scope and Non-Goals</a></li>
+      <li><a href="#boundaries">System Boundaries</a></li>
+      <li><a href="#source-of-truth">Ownership and Source of Truth</a></li>
+      <li><a href="#core-decisions">Core Decisions</a></li>
+      <li><a href="#runtime-flows">Runtime Flows</a></li>
+      <li><a href="#contracts">Data and Interface Contracts</a></li>
+      <li><a href="#acceptance">Failure Cases and Acceptance</a></li>
+      <li><a href="#phases">Implementation Phases</a></li>
+      <li>Modules: <a href="modules/filesystem-layout.html">Filesystem Layout</a>, <a href="modules/conversion-contracts.html">Conversion Contracts</a>, <a href="modules/validation-rollout.html">Validation and Rollout</a></li>
+      <li>Execution tracker: <a href="checklist.json">checklist.json</a></li>
+    </ul>
+  </nav>
+
+  <section id="problem-goal">
+    <h2>Problem and Goal</h2>
+    <p><code>the upstream Claude-Code-Game-Studios source snapshot</code> is a Claude Code framework with Claude-specific agents, slash-command skills, hooks, settings, and <code>CLAUDE.md</code> include conventions. Codex cannot consume those files directly as a native plugin or repository instruction set. This port defines a Codex-native package that preserves the game-studio workflow while replacing Claude-specific surfaces with Codex skills, plugin metadata, repository instructions, references, scripts, and validation gates.</p>
+    <p>The goal is a reviewable migration target that can be implemented without guessing file locations, conversion rules, or completion criteria.</p>
+  </section>
+
+  <section id="scope">
+    <h2>Scope and Non-Goals</h2>
+    <h3>In Scope</h3>
+    <ul>
+      <li>Define a Codex plugin package for the reusable Game Studios workflow.</li>
+      <li>Map 73 Claude skills into Codex <code>SKILL.md</code> folders with Codex trigger descriptions and progressive-disclosure references.</li>
+      <li>Preserve 49 role prompts as Codex role references and route them through skills or implementation guidance.</li>
+      <li>Translate root and path-scoped Claude instructions into Codex <code>AGENTS.md</code> and plugin references.</li>
+      <li>Carry hook scripts forward as explicit validation scripts, with Codex hook registration gated by verified Codex hook schema support.</li>
+      <li>Define validation checks for manifest shape, skill metadata, migrated links, and removed Claude-only assumptions.</li>
+    </ul>
+    <h3>Out of Scope</h3>
+    <ul>
+      <li>Changing the game-development methodology, studio hierarchy, or workflow phase model.</li>
+      <li>Rewriting game design templates for a different design framework.</li>
+      <li>Implementing a new Codex runtime, MCP server, or external app integration.</li>
+      <li>Claiming Claude-style custom subagents exist in Codex unless the current Codex product exposes a matching local extension contract.</li>
+      <li>Shipping converted files to <code>CODEX_HOME</code>; this spec targets a repo-local plugin first.</li>
+    </ul>
+  </section>
+
+  <section id="boundaries">
+    <h2>System Boundaries</h2>
+    <p>The source tree is read-only reference material. The generated Codex package owns converted plugin files and repository-local instructions. Runtime game projects consume the package after installation or local marketplace registration.</p>
+    <pre class="mermaid">flowchart LR
+  Source["the upstream Claude-Code-Game-Studios source snapshot<br>Claude framework source"]
+  Converter["Port implementation<br>inventory + conversion scripts"]
+  Plugin["plugins/codex-game-studios<br>Codex plugin package"]
+  RepoRules["AGENTS.md<br>repo-local Codex instructions"]
+  Marketplace[".agents/plugins/marketplace.json<br>optional repo marketplace entry"]
+  UserProject["Game project using Codex"]
+
+  Source --> Converter
+  Converter --> Plugin
+  Converter --> RepoRules
+  Plugin --> Marketplace
+  Marketplace --> UserProject
+  RepoRules --> UserProject
+    </pre>
+  </section>
+
+  <section id="source-of-truth">
+    <h2>Ownership and Source of Truth</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Layer</th>
+          <th>Owns</th>
+          <th>Rebuildable</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>the upstream Claude-Code-Game-Studios source snapshot</code></td>
+          <td>Original Claude content and upstream license context.</td>
+          <td>No. Treat as external reference input.</td>
+        </tr>
+        <tr>
+          <td><code>design/</code></td>
+          <td>Porting design, conversion contracts, validation plan, and implementation tracker.</td>
+          <td>No. This is the canonical spec package.</td>
+        </tr>
+        <tr>
+          <td><code>plugins/codex-game-studios</code></td>
+          <td>Codex-native plugin manifest, skills, references, scripts, and assets created by the port.</td>
+          <td>Yes, from reference input plus conversion scripts, after manual review of role and skill wording.</td>
+        </tr>
+        <tr>
+          <td><code>AGENTS.md</code></td>
+          <td>Repository-local Codex instructions for projects that use this template directly.</td>
+          <td>Partially. Boilerplate is generated; project-specific edits are user-owned.</td>
+        </tr>
+        <tr>
+          <td><code>.agents/plugins/marketplace.json</code></td>
+          <td>Local marketplace ordering and install policy for the repo-local plugin.</td>
+          <td>Yes. Recreated from plugin name, path, category, and policy.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="core-decisions">
+    <h2>Core Decisions</h2>
+    <div class="decision">
+      <p><strong>What:</strong> The Codex deliverable is a repo-local plugin at <code>plugins/codex-game-studios</code> plus a root <code>AGENTS.md</code> for repository instructions.</p>
+      <p><strong>Why:</strong> The reusable workflow belongs in a plugin, while repository behavior and path rules must be visible to Codex through local instructions. <strong>Reversal condition:</strong> If the user wants a home-wide installation package, use <code>~/plugins/codex-game-studios</code> and <code>~/.agents/plugins/marketplace.json</code> instead.</p>
+    </div>
+    <div class="decision">
+      <p><strong>What:</strong> Claude slash commands become Codex skills with trigger descriptions; command names remain as aliases inside descriptions and examples.</p>
+      <p><strong>Why:</strong> Codex skill routing uses <code>name</code> and <code>description</code> metadata, while Claude slash command invocation is a source convention. <strong>Reversal condition:</strong> If Codex adds slash-command compatibility for local skills, add generated command shims without changing the canonical skill bodies.</p>
+    </div>
+    <div class="decision">
+      <p><strong>What:</strong> Claude agents become role reference files and routing tables, with optional skill-level instructions for when Codex should use built-in sub-agent tools.</p>
+      <p><strong>Why:</strong> The available Codex extension surfaces do not show a Claude-compatible custom agent registry with per-agent model, tool, and memory metadata. <strong>Reversal condition:</strong> If a Codex custom-agent schema is available in the target environment, add a companion generated agent package after validating that schema.</p>
+    </div>
+    <div class="decision">
+      <p><strong>What:</strong> Claude hook scripts are preserved as scripts first; automatic hook registration is a later phase that requires a verified Codex hook JSON contract.</p>
+      <p><strong>Why:</strong> The plugin manifest supports a hook path, but this repository does not contain the Codex hook event schema. <strong>Reversal condition:</strong> Once the Codex hook schema is confirmed, generate <code>hooks.json</code> and wire compatible scripts.</p>
+    </div>
+    <div class="decision">
+      <p><strong>What:</strong> Source references using Claude <code>@path</code> include syntax must be resolved into explicit Codex instructions or normal Markdown links.</p>
+      <p><strong>Why:</strong> The port must not rely on unverified include expansion. <strong>Reversal condition:</strong> If Codex documents compatible include semantics for <code>AGENTS.md</code>, the generated instructions may keep includes where rendering and loading are tested.</p>
+    </div>
+  </section>
+
+  <section id="runtime-flows">
+    <h2>Runtime Flows</h2>
+    <h3>Port Generation Flow</h3>
+    <pre class="mermaid">sequenceDiagram
+  autonumber
+  participant Impl as Port implementation
+  participant Ref as the upstream Claude-Code-Game-Studios source snapshot
+  participant Spec as design spec package
+  participant Plugin as Codex plugin output
+  participant Review as Human review
+
+  Impl->>Ref: Inventory Claude agents, skills, hooks, rules, docs, templates
+  Impl->>Spec: Load conversion contracts and layout
+  Impl->>Plugin: Generate manifest, skills, references, scripts
+  Impl->>Plugin: Rewrite Claude-only invocations and include paths
+  Impl->>Plugin: Run validation suite
+  Impl->>Review: Report diffs, blocked conversions, and manual-review items
+    </pre>
+    <h3>Codex Consumption Flow</h3>
+    <pre class="mermaid">sequenceDiagram
+  autonumber
+  participant User as User in Codex
+  participant Rules as AGENTS.md
+  participant Skill as Codex skill
+  participant Refs as Plugin references
+  participant Files as Project files
+
+  User->>Rules: Starts work in game project
+  Rules-->>User: Loads project instructions and routing constraints
+  User->>Skill: Requests workflow such as start, design-system, or code-review
+  Skill->>Refs: Reads only role, template, or workflow references needed for the task
+  Skill->>Files: Writes or updates project artifacts after normal Codex collaboration
+  Skill-->>User: Reports result and verification signal
+    </pre>
+  </section>
+
+  <section id="contracts">
+    <h2>Data and Interface Contracts</h2>
+    <p>The detailed contracts are split into modules so implementation can check each generated file family independently.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Contract</th>
+          <th>Canonical Section</th>
+          <th>Purpose</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Filesystem ownership</td>
+          <td><a href="modules/filesystem-layout.html#target-layout">modules/filesystem-layout.html#target-layout</a></td>
+          <td>Declares target roots, generated paths, user-owned paths, and excluded source paths.</td>
+        </tr>
+        <tr>
+          <td>Skill conversion</td>
+          <td><a href="modules/conversion-contracts.html#skill-contract">modules/conversion-contracts.html#skill-contract</a></td>
+          <td>Defines how Claude skill metadata and bodies map into Codex <code>SKILL.md</code> folders.</td>
+        </tr>
+        <tr>
+          <td>Role conversion</td>
+          <td><a href="modules/conversion-contracts.html#role-contract">modules/conversion-contracts.html#role-contract</a></td>
+          <td>Defines how Claude agent prompts are retained without claiming unavailable Codex agent features.</td>
+        </tr>
+        <tr>
+          <td>Validation and rollout</td>
+          <td><a href="modules/validation-rollout.html#validation-matrix">modules/validation-rollout.html#validation-matrix</a></td>
+          <td>Defines pass/fail checks, manual review gates, and rollout steps.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="acceptance">
+    <h2>Failure Cases and Acceptance</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Capability</th>
+          <th>Failure Case</th>
+          <th>Acceptance Signal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Plugin manifest</td>
+          <td>Missing required manifest fields or non-relative component paths.</td>
+          <td><code>.codex-plugin/plugin.json</code> validates as JSON and includes <code>name</code>, <code>version</code>, <code>description</code>, <code>skills</code>, and <code>interface</code>.</td>
+        </tr>
+        <tr>
+          <td>Skill routing</td>
+          <td>A converted skill lacks <code>name</code> or a Codex-readable trigger description.</td>
+          <td>All 73 source skills have generated Codex skill folders with valid frontmatter and no Claude-only tool allowlists.</td>
+        </tr>
+        <tr>
+          <td>Role preservation</td>
+          <td>Agent authority, escalation paths, or domain boundaries are dropped during conversion.</td>
+          <td>All 49 source agents have role reference files and are listed in the role routing index.</td>
+        </tr>
+        <tr>
+          <td>Claude-only syntax removal</td>
+          <td>Generated Codex files still instruct users to rely on <code>.claude</code>, <code>CLAUDE.md</code>, <code>Task</code>, <code>AskUserQuestion</code>, or slash commands as the only invocation path.</td>
+          <td>Search results for Claude-only constructs are either zero in generated runtime files or documented in source-reference sections only.</td>
+        </tr>
+        <tr>
+          <td>Hook behavior</td>
+          <td>Automatic hook registration is generated against an unverified event schema.</td>
+          <td>Initial port exposes hook scripts as manual validation scripts; hook registration remains blocked until schema verification passes.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="phases">
+    <h2>Implementation Phases</h2>
+    <ol>
+      <li><strong>Phase 1: Inventory and license boundary.</strong> Goal: produce a source manifest for agents, skills, hooks, rules, docs, templates, and license-bearing files. Includes file counts, source hashes, and excluded paths such as <code>.git</code>. Verify: manifest count matches 49 agents, 73 skills, 12 hooks, and 11 rules.</li>
+      <li><strong>Phase 2: Plugin scaffold.</strong> Goal: create the Codex plugin shell. Includes <code>.codex-plugin/plugin.json</code>, <code>skills/</code>, <code>references/</code>, <code>scripts/</code>, and optional marketplace entry. Verify: JSON files parse and paths are relative to plugin root.</li>
+      <li><strong>Phase 3: Skill and role conversion.</strong> Goal: convert workflow behavior into Codex-native skills and references. Includes frontmatter normalization, Claude tool removal, role routing index, and progressive-disclosure reference links. Verify: every source skill and agent has exactly one generated target entry.</li>
+      <li><strong>Phase 4: Repository instructions and validation scripts.</strong> Goal: translate root instruction behavior and portable hooks. Includes root <code>AGENTS.md</code>, path guidance, validation scripts, and hook-registration decision record. Verify: generated instructions contain no unresolved <code>@path</code> includes.</li>
+      <li><strong>Phase 5: Review and trial run.</strong> Goal: prove the port supports a representative Game Studios workflow. Includes running a sample concept-to-GDD path, a code-review path, and validation checks. Verify: reviewer can follow the workflow without opening <code>the upstream Claude-Code-Game-Studios source snapshot</code>.</li>
+    </ol>
+  </section>
+</main>
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    securityLevel: "strict",
+    theme: "default"
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Test Setup"
+  short_description: "Scaffold the test framework and CI/CD pipeline for the project's engine. Creates the tests/ directory structure, engine-"
+  default_prompt: "Use $codex-game-studios:test-setup for this game-development workflow."

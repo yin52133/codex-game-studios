@@ -1,0 +1,4 @@
+interface:
+  display_name: "Review All Gdds"
+  short_description: "Holistic cross-GDD consistency and game design review. Reads all system GDDs simultaneously and checks for contradiction"
+  default_prompt: "Use $codex-game-studios:review-all-gdds for this game-development workflow."

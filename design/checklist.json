@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "source": "design/index.html",
+  "items": [
+    {
+      "id": "port-001",
+      "title": "Build source inventory for Claude Code Game Studios",
+      "status": "completed",
+      "spec_anchor": "design/index.html#phases",
+      "spec_delta": false,
+      "done_when": "The inventory records 73 skills, 49 agents, 12 hooks, 11 rules, template counts, source paths, and excluded paths."
+    },
+    {
+      "id": "port-002",
+      "title": "Create Codex plugin scaffold",
+      "status": "completed",
+      "spec_anchor": "design/modules/filesystem-layout.html#target-layout",
+      "spec_delta": false,
+      "done_when": "plugins/codex-game-studios contains .codex-plugin/plugin.json, skills, references, scripts, and assets roots with valid relative paths."
+    },
+    {
+      "id": "port-003",
+      "title": "Convert Claude skills into Codex skills",
+      "status": "completed",
+      "spec_anchor": "design/modules/conversion-contracts.html#skill-contract",
+      "spec_delta": false,
+      "done_when": "All 73 source skills have generated Codex SKILL.md files with name and description frontmatter and no Claude-only runtime metadata."
+    },
+    {
+      "id": "port-004",
+      "title": "Convert Claude agents into role references",
+      "status": "completed",
+      "spec_anchor": "design/modules/conversion-contracts.html#role-contract",
+      "spec_delta": false,
+      "done_when": "All 49 source agents have role reference files and appear in the role routing index with mapped skills."
+    },
+    {
+      "id": "port-005",
+      "title": "Generate repository-local Codex instructions",
+      "status": "completed",
+      "spec_anchor": "design/modules/conversion-contracts.html#instructions-contract",
+      "spec_delta": false,
+      "done_when": "AGENTS.md contains resolved Codex instructions and no unresolved Claude @path include syntax."
+    },
+    {
+      "id": "port-006",
+      "title": "Preserve validation hooks as Codex scripts",
+      "status": "completed",
+      "spec_anchor": "design/modules/conversion-contracts.html#hook-contract",
+      "spec_delta": false,
+      "done_when": "Hook scripts are available under scripts/hooks with documentation, and automatic hook registration is omitted until Codex hook schema verification."
+    },
+    {
+      "id": "port-007",
+      "title": "Run validation matrix and reviewer smoke test",
+      "status": "completed",
+      "spec_anchor": "design/modules/validation-rollout.html#validation-matrix",
+      "spec_delta": false,
+      "done_when": "JSON validity, source inventory, skill frontmatter, reference reachability, Claude-only construct checks, and representative workflow smoke tests pass."
+    }
+  ]
+}

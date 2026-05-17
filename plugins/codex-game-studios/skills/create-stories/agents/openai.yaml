@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create Stories"
+  short_description: "Break a single epic into implementable story files. Reads the epic, its GDD, governing ADRs, and control manifest. Each "
+  default_prompt: "Use $codex-game-studios:create-stories for this game-development workflow."

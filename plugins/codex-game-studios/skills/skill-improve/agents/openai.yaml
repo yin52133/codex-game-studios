@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Improve"
+  short_description: "Improve a skill using a test-fix-retest loop. Runs static checks, proposes targeted fixes, rewrites the skill, re-tests,"
+  default_prompt: "Use $codex-game-studios:skill-improve for this game-development workflow."

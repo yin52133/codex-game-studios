@@ -1,0 +1,4 @@
+interface:
+  display_name: "Team Live Ops"
+  short_description: "Orchestrate the live-ops team for post-launch content planning: coordinates live-ops-designer, economy-designer, analyti"
+  default_prompt: "Use $codex-game-studios:team-live-ops for this game-development workflow."

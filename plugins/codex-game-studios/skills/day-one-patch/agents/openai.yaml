@@ -1,0 +1,4 @@
+interface:
+  display_name: "Day One Patch"
+  short_description: "Prepare a day-one patch for a game launch. Scopes, prioritises, implements, and QA-gates a focused patch addressing know"
+  default_prompt: "Use $codex-game-studios:day-one-patch for this game-development workflow."

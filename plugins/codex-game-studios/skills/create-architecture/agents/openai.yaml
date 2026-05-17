@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create Architecture"
+  short_description: "Guided, section-by-section authoring of the master architecture document for the game. Reads all GDDs, the systems index"
+  default_prompt: "Use $codex-game-studios:create-architecture for this game-development workflow."

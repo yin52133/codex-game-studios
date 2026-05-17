@@ -1,0 +1,4 @@
+interface:
+  display_name: "Playtest Report"
+  short_description: "Generates a structured playtest report template or analyzes existing playtest notes into a structured format. Use this t"
+  default_prompt: "Use $codex-game-studios:playtest-report for this game-development workflow."

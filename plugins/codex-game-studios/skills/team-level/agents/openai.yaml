@@ -1,0 +1,4 @@
+interface:
+  display_name: "Team Level"
+  short_description: "Orchestrate level design team: level-designer + narrative-director + world-builder + art-director + systems-designer + q"
+  default_prompt: "Use $codex-game-studios:team-level for this game-development workflow."

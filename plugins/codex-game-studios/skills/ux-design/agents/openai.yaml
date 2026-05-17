@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ux Design"
+  short_description: "Guided, section-by-section UX spec authoring for a screen, flow, or HUD. Reads game concept, player journey, and relevan"
+  default_prompt: "Use $codex-game-studios:ux-design for this game-development workflow."

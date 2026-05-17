@@ -1,0 +1,4 @@
+interface:
+  display_name: "Reverse Document"
+  short_description: "Generate design or architecture documents from existing implementation. Works backwards from code/prototypes to create m"
+  default_prompt: "Use $codex-game-studios:reverse-document for this game-development workflow."

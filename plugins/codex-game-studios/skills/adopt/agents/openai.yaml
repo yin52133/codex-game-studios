@@ -1,0 +1,4 @@
+interface:
+  display_name: "Adopt"
+  short_description: "Brownfield onboarding — audits existing project artifacts for template format compliance (not just existence), classifie"
+  default_prompt: "Use $codex-game-studios:adopt for this game-development workflow."

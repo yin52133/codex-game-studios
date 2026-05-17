@@ -1,0 +1,38 @@
+{
+  "name": "codex-game-studios",
+  "version": "0.1.0",
+  "description": "Codex plugin port of Claude Code Game Studios for structured indie game development workflows.",
+  "author": {
+    "name": "Donchitos, ported for Codex",
+    "url": "https://github.com/Donchitos/Claude-Code-Game-Studios"
+  },
+  "homepage": "https://github.com/Donchitos/Claude-Code-Game-Studios",
+  "repository": "https://github.com/Donchitos/Claude-Code-Game-Studios",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "game-development",
+    "skills",
+    "studio-workflow"
+  ],
+  "skills": "./skills/",
+  "commands": "./commands/",
+  "interface": {
+    "displayName": "Codex Game Studios",
+    "shortDescription": "Structured game-development workflows for Codex.",
+    "longDescription": "Codex-native port of the Claude Code Game Studios framework with game production skills, role references, templates, engine references, and validation scripts.",
+    "developerName": "Donchitos / local Codex port",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/Donchitos/Claude-Code-Game-Studios",
+    "defaultPrompt": [
+      "Start a new game project workflow.",
+      "Design a game system GDD.",
+      "Review my game architecture."
+    ],
+    "brandColor": "#2563EB"
+  }
+}

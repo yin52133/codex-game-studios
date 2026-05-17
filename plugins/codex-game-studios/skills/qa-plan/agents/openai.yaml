@@ -1,0 +1,4 @@
+interface:
+  display_name: "Qa Plan"
+  short_description: "Generate a QA test plan for a sprint or feature. Reads GDDs and story files, classifies stories by test type (Logic/Inte"
+  default_prompt: "Use $codex-game-studios:qa-plan for this game-development workflow."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Content Audit"
+  short_description: "Audit GDD-specified content counts against implemented content. Identifies what's planned vs built. (source alias: /cont"
+  default_prompt: "Use $codex-game-studios:content-audit for this game-development workflow."

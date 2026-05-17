@@ -1,0 +1,4 @@
+interface:
+  display_name: "Team Qa"
+  short_description: "Orchestrate the QA team through a full testing cycle. Coordinates qa-lead (strategy + test plan) and qa-tester (test cas"
+  default_prompt: "Use $codex-game-studios:team-qa for this game-development workflow."

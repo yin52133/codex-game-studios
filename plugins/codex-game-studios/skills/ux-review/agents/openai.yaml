@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ux Review"
+  short_description: "Validates a UX spec, HUD design, or interaction pattern library for completeness, accessibility compliance, GDD alignmen"
+  default_prompt: "Use $codex-game-studios:ux-review for this game-development workflow."

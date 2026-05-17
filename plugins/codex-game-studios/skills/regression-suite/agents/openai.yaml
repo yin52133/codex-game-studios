@@ -1,0 +1,4 @@
+interface:
+  display_name: "Regression Suite"
+  short_description: "Map test coverage to GDD critical paths, identify fixed bugs without regression tests, flag coverage drift from new feat"
+  default_prompt: "Use $codex-game-studios:regression-suite for this game-development workflow."

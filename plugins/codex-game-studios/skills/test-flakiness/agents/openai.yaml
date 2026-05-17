@@ -1,0 +1,4 @@
+interface:
+  display_name: "Test Flakiness"
+  short_description: "Detect non-deterministic (flaky) tests by reading CI run logs or test result history. Aggregates pass rates per test, id"
+  default_prompt: "Use $codex-game-studios:test-flakiness for this game-development workflow."

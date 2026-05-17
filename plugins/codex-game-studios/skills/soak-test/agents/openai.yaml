@@ -1,0 +1,4 @@
+interface:
+  display_name: "Soak Test"
+  short_description: "Generate a soak test protocol for extended play sessions. Defines what to observe, measure, and log during long play ses"
+  default_prompt: "Use $codex-game-studios:soak-test for this game-development workflow."

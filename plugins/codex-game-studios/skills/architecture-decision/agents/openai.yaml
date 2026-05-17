@@ -1,0 +1,4 @@
+interface:
+  display_name: "Architecture Decision"
+  short_description: "Creates an Architecture Decision Record (ADR) documenting a significant technical decision, its context, alternatives co"
+  default_prompt: "Use $codex-game-studios:architecture-decision for this game-development workflow."

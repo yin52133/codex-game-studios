@@ -1,0 +1,4 @@
+interface:
+  display_name: "Prototype"
+  short_description: "Concept prototype — validate the core idea is worth designing before writing GDDs. Run right after /brainstorm and /setu"
+  default_prompt: "Use $codex-game-studios:prototype for this game-development workflow."

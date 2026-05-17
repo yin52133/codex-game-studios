@@ -1,0 +1,4 @@
+interface:
+  display_name: "Propagate Design Change"
+  short_description: "When a GDD is revised, scans all ADRs and the traceability index to identify which architectural decisions are now poten"
+  default_prompt: "Use $codex-game-studios:propagate-design-change for this game-development workflow."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Test"
+  short_description: "Validate skill files for structural compliance and behavioral correctness. Three modes: static (linter), spec (behaviora"
+  default_prompt: "Use $codex-game-studios:skill-test for this game-development workflow."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Quick Design"
+  short_description: "Lightweight design spec for small changes — tuning adjustments, minor mechanics, balance tweaks. Skips full GDD authorin"
+  default_prompt: "Use $codex-game-studios:quick-design for this game-development workflow."

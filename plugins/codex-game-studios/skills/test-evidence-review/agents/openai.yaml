@@ -1,0 +1,4 @@
+interface:
+  display_name: "Test Evidence Review"
+  short_description: "Quality review of test files and manual evidence documents. Goes beyond existence checks — evaluates assertion coverage,"
+  default_prompt: "Use $codex-game-studios:test-evidence-review for this game-development workflow."

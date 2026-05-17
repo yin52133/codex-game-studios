@@ -1,0 +1,4 @@
+interface:
+  display_name: "Architecture Review"
+  short_description: "Validates completeness and consistency of the project architecture against all GDDs. Builds a traceability matrix mappin"
+  default_prompt: "Use $codex-game-studios:architecture-review for this game-development workflow."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Bug Triage"
+  short_description: "Read all open bugs in production/qa/bugs/, re-evaluate priority vs. severity, assign to sprints, surface systemic trends"
+  default_prompt: "Use $codex-game-studios:bug-triage for this game-development workflow."

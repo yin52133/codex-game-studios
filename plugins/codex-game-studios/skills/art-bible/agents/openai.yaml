@@ -1,0 +1,4 @@
+interface:
+  display_name: "Art Bible"
+  short_description: "Guided, section-by-section Art Bible authoring. Creates the visual identity specification that gates all asset productio"
+  default_prompt: "Use $codex-game-studios:art-bible for this game-development workflow."

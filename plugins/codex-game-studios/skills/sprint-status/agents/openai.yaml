@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sprint Status"
+  short_description: "Fast sprint status check. Reads the current sprint plan, scans story files for status, and produces a concise progress s"
+  default_prompt: "Use $codex-game-studios:sprint-status for this game-development workflow."

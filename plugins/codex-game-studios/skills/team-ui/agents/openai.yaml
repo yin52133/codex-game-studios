@@ -1,0 +1,4 @@
+interface:
+  display_name: "Team Ui"
+  short_description: "Orchestrate the UI team through the full UX pipeline: from UX spec authoring through visual design, implementation, revi"
+  default_prompt: "Use $codex-game-studios:team-ui for this game-development workflow."

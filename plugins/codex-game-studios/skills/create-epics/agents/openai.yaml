@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create Epics"
+  short_description: "Translate approved GDDs + architecture into epics — one epic per architectural module. Defines scope, governing ADRs, en"
+  default_prompt: "Use $codex-game-studios:create-epics for this game-development workflow."

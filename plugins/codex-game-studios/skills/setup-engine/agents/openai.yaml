@@ -1,0 +1,4 @@
+interface:
+  display_name: "Setup Engine"
+  short_description: "Configure the project's game engine and version. Pins the engine in AGENTS.md, detects knowledge gaps, and populates eng"
+  default_prompt: "Use $codex-game-studios:setup-engine for this game-development workflow."

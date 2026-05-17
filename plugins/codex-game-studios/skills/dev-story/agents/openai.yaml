@@ -1,0 +1,4 @@
+interface:
+  display_name: "Dev Story"
+  short_description: "Read a story file and implement it. Loads the full context (story, GDD requirement, ADR guidelines, control manifest), r"
+  default_prompt: "Use $codex-game-studios:dev-story for this game-development workflow."

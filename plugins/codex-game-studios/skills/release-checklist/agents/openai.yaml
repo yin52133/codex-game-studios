@@ -1,0 +1,4 @@
+interface:
+  display_name: "Release Checklist"
+  short_description: "Generates a comprehensive pre-release validation checklist covering build verification, certification requirements, stor"
+  default_prompt: "Use $codex-game-studios:release-checklist for this game-development workflow."

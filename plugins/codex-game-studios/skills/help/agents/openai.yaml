@@ -1,0 +1,4 @@
+interface:
+  display_name: "Help"
+  short_description: "Analyzes what is done and the users query and offers advice on what to do next. Use if user says what should I do next o"
+  default_prompt: "Use $codex-game-studios:help for this game-development workflow."
