@@ -14,17 +14,41 @@ Codex Game Studios is a Codex-native plugin package for structured solo and smal
 
 The plugin is self-contained. It does not require a local `ref/` checkout to install, remove, or validate.
 
-## Install
+## Install Globally
 
-From this repository root:
+Install from GitHub so the plugin is available in any Codex workspace:
+
+```bash
+codex plugin marketplace add yin52133/codex-game-studios --ref mainline
+```
+
+Equivalent Git URL form:
+
+```bash
+codex plugin marketplace add https://github.com/yin52133/codex-game-studios.git --ref mainline
+```
+
+This registers the marketplace named `codex-game-studios`, which exposes the `codex-game-studios` plugin from `plugins/codex-game-studios`.
+
+Codex's current CLI installs plugins by adding a marketplace. There is no separate `codex plugin install` subcommand in the current command surface; `codex plugin marketplace add ...` is the install step.
+
+## Install for Local Development
+
+From this repository root, register the checkout directly:
 
 ```bash
 codex plugin marketplace add .
 ```
 
-This registers the local marketplace named `codex-game-studios-local`, which exposes the `codex-game-studios` plugin from `plugins/codex-game-studios`.
+Use the local form only when developing or testing changes in this checkout.
 
 ## Remove
+
+```bash
+codex plugin marketplace remove codex-game-studios
+```
+
+If you previously installed an older local marketplace name, remove it with:
 
 ```bash
 codex plugin marketplace remove codex-game-studios-local
@@ -55,7 +79,7 @@ For an install/remove smoke test without touching your normal Codex config:
 ```bash
 tmp_home=$(mktemp -d /tmp/codex-game-studios.XXXXXX)
 CODEX_HOME="$tmp_home" codex plugin marketplace add .
-CODEX_HOME="$tmp_home" codex plugin marketplace remove codex-game-studios-local
+CODEX_HOME="$tmp_home" codex plugin marketplace remove codex-game-studios
 rm -rf "$tmp_home"
 ```
 
@@ -70,6 +94,14 @@ $codex-game-studios:code-review
 ```
 
 Command files are available under `plugins/codex-game-studios/commands/` for slash-style command surfaces such as `/start`, `/design-system`, and `/code-review`.
+
+## Update
+
+To refresh the marketplace after a new commit lands on `mainline`:
+
+```bash
+codex plugin marketplace upgrade codex-game-studios
+```
 
 ## Design Notes
 

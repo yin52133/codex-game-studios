@@ -1,7 +1,7 @@
 {
-  "name": "codex-game-studios-local",
+  "name": "codex-game-studios",
   "interface": {
-    "displayName": "Codex Game Studios Local"
+    "displayName": "Codex Game Studios"
   },
   "plugins": [
     {
